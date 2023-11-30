@@ -33,3 +33,44 @@ def visualize_graph(graph, levels=None, path=None, title="Graph"):
 
     plt.title(title)
     plt.show()
+
+def calculate_levels(graph, source):
+    levels = {source: 0}
+    queue = collections.deque([source])
+
+    while queue:
+        current_node = queue.popleft()
+        for successor in graph.successors(current_node):
+            if successor not in levels:
+                levels[successor] = levels[current_node] + 1
+                queue.append(successor)
+
+    return levels
+
+def visualize_graph_with_levels(graph, levels, title="Graph with Levels"):
+    pos = nx.spring_layout(graph)
+    node_colors = [levels[node] for node in graph.nodes()]
+    edge_labels = {(u, v): graph[u][v]['capacity'] for u, v in graph.edges()}
+    nx.draw(graph, pos, with_labels=True, font_weight='bold', node_color=node_colors, cmap=plt.cm.Blues)
+    nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
+
+    for node, (x, y) in pos.items():
+        plt.text(x, y, f"Level: {levels[node]}", fontsize=8, ha='center', va='center', bbox=dict(facecolor='white', alpha=0.5))
+
+    plt.title(title)
+    plt.show()
+def bfs(graph, source, target):
+    visited = set()
+    queue = collections.deque([(source, [source])])
+
+    while queue:
+        current_node, path = queue.popleft()
+        visited.add(current_node)
+
+        for successor in graph.successors(current_node):
+            if successor not in visited and graph[current_node][successor]['capacity'] > 0:
+                if successor == target:
+                    return path + [successor]
+                queue.append((successor, path + [successor]))
+
+    return []
