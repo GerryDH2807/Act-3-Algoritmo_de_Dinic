@@ -51,7 +51,8 @@ def visualize_graph_with_levels(graph, levels, title="Graph with Levels"):
     pos = nx.spring_layout(graph)
     node_colors = [levels[node] for node in graph.nodes()]
     edge_labels = {(u, v): graph[u][v]['capacity'] for u, v in graph.edges()}
-    nx.draw(graph, pos, with_labels=True, font_weight='bold', node_color=node_colors, cmap=plt.cm.Blues)
+    edge_colors = [graph[u][v]['capacity'] for u, v in graph.edges()]
+    nx.draw(graph, pos, with_labels=True, font_weight='bold', node_color=node_colors, edge_color=edge_colors, width=2,  cmap=plt.cm.Blues)
     nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
 
     for node, (x, y) in pos.items():
@@ -59,6 +60,7 @@ def visualize_graph_with_levels(graph, levels, title="Graph with Levels"):
 
     plt.title(title)
     plt.show()
+    
 def bfs(graph, source, target):
     visited = set()
     queue = collections.deque([(source, [source])])
@@ -126,3 +128,4 @@ dinic(g, s, t)
 #%%
 # Dibujado final del grafo resultante 
 visualize_graph(g, title="Final Graph")
+# %%
