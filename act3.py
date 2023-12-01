@@ -74,3 +74,33 @@ def bfs(graph, source, target):
                 queue.append((successor, path + [successor]))
 
     return []
+
+def update_flow(graph, path):
+    min_capacity = min(graph[u][v]['capacity'] for u, v in zip(path[:-1], path[1:]))
+    
+    for u, v in zip(path[:-1], path[1:]):
+        graph[u][v]['capacity'] -= min_capacity
+        graph[u][v]['flow'] += min_capacity
+
+        if v in graph:
+            if u in graph[v]:
+                graph[v][u]['capacity'] += min_capacity
+                graph[v][u]['flow'] -= min_capacity
+            else:
+                graph.add_edge(v, u, capacity=min_capacity, flow=-min_capacity)
+
+def dinic(graph, source, target):
+    levels = calculate_levels(graph, source)
+    visualize_graph_with_levels(graph, levels, title="Graph with Levels (Before Dinic)")
+
+    while levels[target] is not None:
+        path = bfs(graph, source, target)
+
+        if not path:
+            break
+
+        visualize_graph(graph, path=path, title="Graph with Augmenting Path")
+        update_flow(graph, path)
+
+        levels = calculate_levels(graph, source)
+        visualize_graph_with_levels(graph, levels, title="Graph with Updated Levels")
