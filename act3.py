@@ -104,3 +104,25 @@ def dinic(graph, source, target):
 
         levels = calculate_levels(graph, source)
         visualize_graph_with_levels(graph, levels, title="Graph with Updated Levels")
+
+#%%
+# Lectura de archivo de texto 
+file_path = "input.txt"  #<----------------------------- Nombre de archivo
+g, s, t = read_graph(file_path)
+
+# Dibujado del grafo leido en el txt
+labels = dict([(n, n) for n in g.nodes()])
+nx.draw(g, labels=labels)
+plt.show()
+
+# Inicio de algoritmo de Dinics, la primera función es el BFS para el calculo de niveles y despues realiza el dibujado del grafo de nivel 
+levels = calculate_levels(g, s)
+visualize_graph_with_levels(g, levels, title="Graph with Levels")
+
+#%%
+# Realiza la actualizacion de flujo dependiendo los pesos y dibuja los resultados obtenidos 
+dinic(g, s, t)
+
+#%%
+# Dibujado final del grafo resultante 
+visualize_graph(g, title="Final Graph")
